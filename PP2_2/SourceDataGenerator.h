@@ -17,7 +17,7 @@ public:
 
 private:
 
-    size_t count = 1000000 * 4;
+    size_t count = 1000000;
 
 };
 

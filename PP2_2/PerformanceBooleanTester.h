@@ -13,7 +13,7 @@ public:
     void SetCount(int c) { count = c; }
     int GetCount() const { return count; }
 
-    bool Measure(TAlg alg);
+    bool Measure(const TAlg& alg);
 
     TMcs GetMeasureDuration() const { return measureRes; }
 

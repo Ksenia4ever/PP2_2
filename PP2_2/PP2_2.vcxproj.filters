@@ -21,6 +21,9 @@
     <ClInclude Include="SourceDataGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ParallelAllOf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PerformanceBooleanTester.cpp">
