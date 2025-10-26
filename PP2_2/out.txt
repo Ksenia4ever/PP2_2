@@ -1,0 +1,184 @@
+Source data lenght: 10000000
+
+	all_of without policy (random data).
+	Duration (mcs) 2
+	Result         False
+
+	std::all_of without policy.
+	Duration (mcs) 5216
+	Result         True
+
+	std::all_of sequential policy.
+	Duration (mcs) 17792
+	Result         True
+
+	std::all_of with parallel policy.
+	Duration (mcs) 3913
+	Result         True
+
+	std::all_of with vectorized policy.
+	Duration (mcs) 17737
+	Result         True
+
+	std::all_of with parallel-vectorized policy.
+	Duration (mcs) 3640
+	Result         True
+
+	ParallelAllOf.
+	K   Duration (mcs)  Result
+	1    16839           True
+	2    9436            True
+	3    6720            True
+	4    5495            True
+	5    5115            True
+	6    4559            True
+	7    4049            True
+	8    3860            True
+	9    6102            True
+	10   4863            True
+	11   4544            True
+	12   3997            True
+	13   3918            True
+	14   3929            True
+	15   4246            True
+	16   5396            True
+	Best K = 8 Duration: 3860
+
+Source data lenght: 20000000
+
+	all_of without policy (random data).
+	Duration (mcs) 0
+	Result         False
+
+	std::all_of without policy.
+	Duration (mcs) 9863
+	Result         True
+
+	std::all_of sequential policy.
+	Duration (mcs) 33578
+	Result         True
+
+	std::all_of with parallel policy.
+	Duration (mcs) 7464
+	Result         True
+
+	std::all_of with vectorized policy.
+	Duration (mcs) 33268
+	Result         True
+
+	std::all_of with parallel-vectorized policy.
+	Duration (mcs) 7086
+	Result         True
+
+	ParallelAllOf.
+	K   Duration (mcs)  Result
+	1    37040           True
+	2    18686           True
+	3    13044           True
+	4    10009           True
+	5    9007            True
+	6    7687            True
+	7    11090           True
+	8    6453            True
+	9    8875            True
+	10   8187            True
+	11   7565            True
+	12   7706            True
+	13   7476            True
+	14   7153            True
+	15   6989            True
+	16   6758            True
+	Best K = 8 Duration: 6453
+
+Source data lenght: 30000000
+
+	all_of without policy (random data).
+	Duration (mcs) 0
+	Result         False
+
+	std::all_of without policy.
+	Duration (mcs) 14948
+	Result         True
+
+	std::all_of sequential policy.
+	Duration (mcs) 49385
+	Result         True
+
+	std::all_of with parallel policy.
+	Duration (mcs) 10643
+	Result         True
+
+	std::all_of with vectorized policy.
+	Duration (mcs) 50110
+	Result         True
+
+	std::all_of with parallel-vectorized policy.
+	Duration (mcs) 10578
+	Result         True
+
+	ParallelAllOf.
+	K   Duration (mcs)  Result
+	1    52550           True
+	2    28363           True
+	3    19418           True
+	4    15136           True
+	5    12907           True
+	6    11195           True
+	7    10343           True
+	8    9538            True
+	9    13094           True
+	10   12468           True
+	11   12189           True
+	12   11001           True
+	13   10939           True
+	14   10442           True
+	15   10044           True
+	16   11464           True
+	Best K = 8 Duration: 9538
+
+Source data lenght: 40000000
+
+	all_of without policy (random data).
+	Duration (mcs) 0
+	Result         False
+
+	std::all_of without policy.
+	Duration (mcs) 19143
+	Result         True
+
+	std::all_of sequential policy.
+	Duration (mcs) 66351
+	Result         True
+
+	std::all_of with parallel policy.
+	Duration (mcs) 14026
+	Result         True
+
+	std::all_of with vectorized policy.
+	Duration (mcs) 69303
+	Result         True
+
+	std::all_of with parallel-vectorized policy.
+	Duration (mcs) 14034
+	Result         True
+
+	ParallelAllOf.
+	K   Duration (mcs)  Result
+	1    67609           True
+	2    35565           True
+	3    27759           True
+	4    19577           True
+	5    17429           True
+	6    14929           True
+	7    13172           True
+	8    12425           True
+	9    17354           True
+	10   16260           True
+	11   15910           True
+	12   14779           True
+	13   14194           True
+	14   13575           True
+	15   13258           True
+	16   16492           True
+	Best K = 8 Duration: 12425
+

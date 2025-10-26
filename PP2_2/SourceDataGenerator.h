@@ -17,7 +17,6 @@ public:
 
 private:
 
-    size_t count = 1000000;
-
+    size_t count = 1;
 };
 

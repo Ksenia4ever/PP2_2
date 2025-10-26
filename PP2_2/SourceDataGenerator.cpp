@@ -5,7 +5,7 @@
 SourceDataGenerator::TValues SourceDataGenerator::GenerateRandomSequence() const
 {
     auto gen = std::mt19937(std::random_device{}());
-    auto dist = std::uniform_int_distribution<TValue>(0, 100);
+    auto dist = std::uniform_int_distribution<TValue>(1, 100);
 
     auto values = TValues(GetCount(), 0);
     for (auto& val : values)
@@ -19,7 +19,7 @@ SourceDataGenerator::TValues SourceDataGenerator::GenerateRandomSequence() const
 SourceDataGenerator::TValues SourceDataGenerator::GeneratePerformanceSequence() const
 {
     auto gen = std::mt19937(std::random_device{}());
-    auto dist = std::uniform_int_distribution<TValue>(0, 50);
+    auto dist = std::uniform_int_distribution<TValue>(1, 50);
 
     auto values = TValues(GetCount(), 0);
     for (auto& val : values)

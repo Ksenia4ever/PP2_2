@@ -9,45 +9,78 @@
 #include "PerformanceBooleanTester.h"
 #include "ParallelAllOf.h"
 
+bool IsEven(SourceDataGenerator::TValue value)
+{
+    return value % 2 == 0;
+}
+
 bool AllOf(const SourceDataGenerator::TValues& data)
 {
-    return std::all_of(data.begin(), data.end(), [](auto val) {return val % 2 == 0; });
+    return std::all_of(data.begin(), data.end(), IsEven);
 }
 
 bool AllOfSequential(const SourceDataGenerator::TValues& data)
 {
-    return std::all_of(std::execution::seq, data.begin(), data.end(), [](auto val) { return val % 2 == 0; });
+    return std::all_of(std::execution::seq, data.begin(), data.end(), IsEven);
 }
 
 bool AllOfParallel(const SourceDataGenerator::TValues& data)
 {
-    return std::all_of(std::execution::par, data.begin(), data.end(), [](auto val) { return val % 2 == 0; });
+    return std::all_of(std::execution::par, data.begin(), data.end(), IsEven);
 }
 
 bool AllOfUnseq(const SourceDataGenerator::TValues& data)
 {
-    return std::all_of(std::execution::unseq, data.begin(), data.end(), [](auto val) { return val % 2 == 0; });
+    return std::all_of(std::execution::unseq, data.begin(), data.end(), IsEven);
 }
 
 bool AllOfParallelUnseq(const SourceDataGenerator::TValues& data)
 {
-    return std::all_of(std::execution::par_unseq, data.begin(), data.end(), [](auto val) { return val % 2 == 0; });
+    return std::all_of(std::execution::par_unseq, data.begin(), data.end(), IsEven);
 }
 
 bool PAllOf(const SourceDataGenerator::TValues& data, unsigned int k)
 {
     ParallelAllOf allOf;
     allOf.SetK(k);
-    return allOf.AllOf(data.begin(), data.end(), [](auto val) { return val % 2 == 0; });
+    return allOf.AllOf(data.begin(), data.end(), IsEven);
 }
 
-void Test(PerformanceBooleanTester& tester, const PerformanceBooleanTester::TAlg& alg, const std::string& header)
+template<typename Pred>
+void Test(Pred p, const SourceDataGenerator::TValues& data, const std::string& header)
 {
+    auto tester = PerformanceBooleanTester();
+
     std::cout << "\t" << header << std::endl;
-    const auto res = tester.Measure(alg);
+
+    const auto res = tester.Measure([&]() { return p(data); });
     const auto dur = tester.GetMeasureDuration();
-    std::cout << "\tResult: " << (res ? "True" : "False") << std::endl;
-    std::cout << "\tDuration: " << dur << " mcs." << std::endl;
+    std::cout << "\tDuration (mcs) " << dur << std::endl;
+    std::cout << "\tResult         " << (res ? "True" : "False") << std::endl;
+    std::cout << std::endl;
+}
+
+template<typename Pred>
+void TestK(Pred p, const SourceDataGenerator::TValues& data, unsigned int k, const std::string& header)
+{
+    auto tester = PerformanceBooleanTester();
+    auto measures = std::vector<PerformanceBooleanTester::TMcs>(k, 0);
+
+    std::cout << "\t" << header << std::endl;
+    std::cout << "\t" << "K   Duration (mcs)  Result" << std::endl;
+    for (unsigned int numK = 1; numK <= k; numK++)
+    {
+        const auto res = tester.Measure([&]() { return p(data, numK); });
+        const auto dur = tester.GetMeasureDuration();
+        std::cout << "\t" << std::format("{:<5}", numK) << std::format("{:<16}", dur) << (res ? "True" : "False") << std::endl;
+
+        measures[numK - 1] = dur;
+    }
+
+    const auto it = std::min_element(measures.begin(), measures.end());
+    const auto minK = std::distance(measures.begin(), it) + 1;
+    std::cout << "\tBest K = " << minK << " Duration: " << *it << std::endl;
+
     std::cout << std::endl;
 }
 
@@ -62,20 +95,14 @@ void RunProgram()
         const auto rndSequence = gen.GenerateRandomSequence();
         const auto prfSequence = gen.GeneratePerformanceSequence();
 
-        auto tester = PerformanceBooleanTester();
-        tester.SetCount(10);
+        Test(AllOf, rndSequence, "all_of without policy (random data).");
+        Test(AllOf, prfSequence, "std::all_of without policy.");
+        Test(AllOfSequential, prfSequence, "std::all_of sequential policy.");
+        Test(AllOfParallel, prfSequence, "std::all_of with parallel policy.");
+        Test(AllOfUnseq, prfSequence, "std::all_of with vectorized policy.");
+        Test(AllOfParallelUnseq, prfSequence, "std::all_of with parallel-vectorized policy.");
 
-        Test(tester, [&]() {return AllOf(rndSequence); }, "Random data. all_of without policy.");
-        Test(tester, [&]() {return AllOf(prfSequence); }, "Performance data. all_of without policy.");
-        Test(tester, [&]() {return AllOfSequential(prfSequence); }, "Performance data. all_of sequential policy.");
-        Test(tester, [&]() {return AllOfParallel(prfSequence); }, "Performance data. all_of with parallel policy.");
-        Test(tester, [&]() {return AllOfUnseq(prfSequence); }, "Performance data. all_of with vectorized policy.");
-        Test(tester, [&]() {return AllOfParallelUnseq(prfSequence); }, "Performance data. all_of with parallel-vectorized policy.");
-
-        for (int k = 1; k <= 16; k++)
-        {
-            Test(tester, [&]() {return PAllOf(prfSequence, k); }, std::format("Performance data. ParallelAllOf. K={}", k));
-        }
+        TestK(PAllOf, prfSequence, 16, "ParallelAllOf.");
     }
 }
 

@@ -41,7 +41,8 @@ public:
 
                 auto th = std::thread([&results, &p, from, to, chunkIndex]()
                 {
-                    results[chunkIndex] = std::all_of(from, to, p);
+                    const auto chunkRes = std::all_of(std::execution::seq, from, to, p);
+                    results[chunkIndex] = chunkRes;
                 });
                 
                 threads.push_back(std::move(th));
@@ -49,10 +50,13 @@ public:
 
             for (auto& th : threads)
             {
-                th.join();
+                if (th.joinable())
+                {
+                    th.join();
+                }
             }
 
-            res = std::all_of(results.begin(), results.end(), [](const auto& r) {return r; });
+            res = std::all_of(std::execution::seq, results.begin(), results.end(), [](const auto& r) { return r; });
         }
 
         return res;

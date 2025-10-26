@@ -19,7 +19,7 @@ public:
 
 private:
 
-    int count = 1;
+    int count = 5;
     TMcs measureRes = 0;
 };
 
